@@ -16,7 +16,7 @@ local CONFIG = {
     HEIGHT_OFFSET = 3,
     DELAY_AFTER_RESET = 1,
     JUMP_POWER = 50,
-    JUMP_COUNT = 3
+    JUMP_COUNT = 2
 }
 
 -- Variables for chest counter
@@ -28,10 +28,10 @@ local isLocked = false
 local function createGui()
     local gui = Instance.new("ScreenGui")
     gui.Name = "C"..tostring(math.random(1000, 9999))
-    gui.IgnoreGuiInset = true  -- Thêm dòng này để GUI phủ toàn màn hình
-    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling  -- Đảm bảo hiển thị đúng thứ tự
-    gui.DisplayOrder = 999999  -- Đặt GUI lên trên các GUI khác
-    gui.ResetOnSpawn = false  -- Giữ GUI khi nhân vật respawn
+    gui.IgnoreGuiInset = true
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.DisplayOrder = 999999
+    gui.ResetOnSpawn = false
     gui.Parent = player.PlayerGui
     
     -- Background frame full screen
@@ -42,31 +42,42 @@ local function createGui()
     background.BackgroundTransparency = 0.7
     background.Size = UDim2.new(1, 0, 1, 0)
     background.Position = UDim2.new(0, 0, 0, 0)
-    background.BorderSizePixel = 0  -- Loại bỏ viền
+    background.BorderSizePixel = 0
+    
+    -- Container for centered content
+    local container = Instance.new("Frame")
+    container.Name = "Container"
+    container.Parent = background
+    container.Size = UDim2.new(0, 400, 0, 150) -- Fixed size container
+    container.Position = UDim2.new(0.5, 0, 0.5, 0) -- Center of screen
+    container.AnchorPoint = Vector2.new(0.5, 0.5) -- Center anchor point
+    container.BackgroundTransparency = 1
     
     -- Main text
     local mainText = Instance.new("TextLabel")
     mainText.Name = "MainText"
-    mainText.Parent = background
-    mainText.Size = UDim2.new(0.5, 0, 0.1, 0)
-    mainText.Position = UDim2.new(0.25, 0, 0.45, 0)
+    mainText.Parent = container
+    mainText.Size = UDim2.new(1, 0, 0.5, 0) -- Take full container width
+    mainText.Position = UDim2.new(0, 0, 0, 0)
     mainText.BackgroundTransparency = 1
     mainText.Text = "Auto Farm Chest"
     mainText.TextColor3 = Color3.fromRGB(255, 255, 255)
     mainText.TextSize = 48
     mainText.Font = Enum.Font.GothamBold
+    mainText.AnchorPoint = Vector2.new(0, 0)
     
     -- Credit text
     local creditText = Instance.new("TextLabel")
     creditText.Name = "CreditText"
-    creditText.Parent = background
-    creditText.Size = UDim2.new(0.3, 0, 0.05, 0)
-    creditText.Position = UDim2.new(0.35, 0, 0.55, 0)
+    creditText.Parent = container
+    creditText.Size = UDim2.new(1, 0, 0.3, 0) -- Take full container width
+    creditText.Position = UDim2.new(0, 0, 0.6, 0) -- Position below main text
     creditText.BackgroundTransparency = 1
     creditText.Text = "made by VuongDacThong"
     creditText.TextColor3 = Color3.fromRGB(200, 200, 200)
     creditText.TextSize = 24
     creditText.Font = Enum.Font.Gotham
+    creditText.AnchorPoint = Vector2.new(0, 0)
     
     -- Add gradient effect to background
     local gradient = Instance.new("UIGradient")
@@ -96,6 +107,21 @@ local function createGui()
         Rotation = 360
     })
     tween:Play()
+    
+    -- Thêm hiệu ứng fade in
+    background.BackgroundTransparency = 1
+    mainText.TextTransparency = 1
+    creditText.TextTransparency = 1
+    
+    local fadeInfo = TweenInfo.new(
+        1, -- Time
+        Enum.EasingStyle.Quad,
+        Enum.EasingDirection.Out
+    )
+    
+    tweenService:Create(background, fadeInfo, {BackgroundTransparency = 0.7}):Play()
+    tweenService:Create(mainText, fadeInfo, {TextTransparency = 0}):Play()
+    tweenService:Create(creditText, fadeInfo, {TextTransparency = 0}):Play()
     
     return gui, mainText
 end

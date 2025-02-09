@@ -16,7 +16,7 @@ local CONFIG = {
     HEIGHT_OFFSET = 3,
     DELAY_AFTER_RESET = 1,
     JUMP_POWER = 50,
-    JUMP_COUNT = 2
+    JUMP_COUNT = 3
 }
 
 -- Variables for chest counter
@@ -25,10 +25,13 @@ local currentResetTarget = math.random(CONFIG.MIN_CHESTS, CONFIG.MAX_CHESTS)
 local currentChestCFrame = nil
 local isLocked = false
 
--- GUI function thay thế
 local function createGui()
     local gui = Instance.new("ScreenGui")
     gui.Name = "C"..tostring(math.random(1000, 9999))
+    gui.IgnoreGuiInset = true  -- Thêm dòng này để GUI phủ toàn màn hình
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling  -- Đảm bảo hiển thị đúng thứ tự
+    gui.DisplayOrder = 999999  -- Đặt GUI lên trên các GUI khác
+    gui.ResetOnSpawn = false  -- Giữ GUI khi nhân vật respawn
     gui.Parent = player.PlayerGui
     
     -- Background frame full screen
@@ -39,6 +42,7 @@ local function createGui()
     background.BackgroundTransparency = 0.7
     background.Size = UDim2.new(1, 0, 1, 0)
     background.Position = UDim2.new(0, 0, 0, 0)
+    background.BorderSizePixel = 0  -- Loại bỏ viền
     
     -- Main text
     local mainText = Instance.new("TextLabel")
